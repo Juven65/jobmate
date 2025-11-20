@@ -1,110 +1,96 @@
 # 🧑‍💼 JobMate – Django Job Portal
 
-JobMate is a full-featured job portal built with **Django**, offering three user roles:
+> **Developer Note:** Lahat ng codes, structures, explanations, at logic na ginamit sa project na ito ay galing at tinulungan ni **ChatGPT**. 😊
 
-- 👤 **Job Seekers** – create profiles, search jobs, apply
-- 🏢 **Employers** – post jobs, manage applicants
-- ⚙️ **Admin** – manage users, jobs, applications, analytics dashboard
-
-This project includes authentication, role-based access, admin analytics (Chart.js), and modern UI using Bootstrap 5.
+JobMate is a full-featured job portal built with **Django**, offering three main user roles with complete authentication, dashboards, and job management.
 
 ---
 
 ## 🚀 Features
 
 ### 🔹 **Job Seekers**
-- Registration & login  
-- Upload resume  
-- Browse & search jobs  
-- Apply to jobs  
-- View application history  
+
+* Sign up / login
+* Upload resume
+* Browse & search jobs
+* Apply to jobs
+* View application history
 
 ### 🔹 **Employers**
-- Register & login  
-- Create & manage job posts  
-- View applicants  
-- Edit & delete job listings  
+
+* Register & login
+* Create and manage job postings
+* View applicants
+* Edit & delete job listings
 
 ### 🔹 **Admin Panel**
-- Dashboard analytics  
-  - Total users  
-  - Total employers  
-  - Active job seekers  
-  - Applications per day  
-  - Jobs per employer  
-- Manage all users  
-- Activate / deactivate accounts  
-- Delete users  
-- View recent applicants & employers  
-- Admin charts using **Chart.js**
+
+* Full analytics dashboard (Chart.js)
+* Manage all users (activate / deactivate)
+* View recent applicants
+* Admin charts and insights
+
+---
 
 ## ✉️ Email System
 
-JobMate includes built-in email features using Django’s `django.core.mail` and token-based verification.
+### **Email Verification (Activation)**
 
-### 🔹 Email Verification (Account Activation)
-When a new user registers, the system sends an **email verification link**.  
-The user must click the link to activate their account.
+* New users receive an activation link
+* Token-protected
+* Link expires
+* Prevents fake signups
 
-✔️ Secure token (Django built-in)  
-✔️ Activation link expires  
-✔️ Protects against fake signups  
-✔️ Works for both Employers and Job Seekers
+### **Password Reset via Email**
 
-### 🔹 Password Reset via Email
-Users can request a password reset by entering their email.
+* Users enter their email to request reset link
+* Secure token-based password reset
+* Auto-expiring reset URL
 
-The system sends a secure link that allows them to create a new password.
+---
 
-✔️ Token-based secure reset link  
-✔️ Auto-expiring password reset token  
-✔️ Works for both employers and job seekers  
-✔️ Fully compatible with Django Auth system
+## 🛠️ Tech Stack
 
-### 🔹🛠️ Tech Stack
+* **Backend:** Django 5+
+* **Frontend:** Bootstrap 5, FontAwesome
+* **Database:** SQLite (default), MySQL compatible
+* **Charts:** Chart.js
+* **Email:** SMTP (Gmail / Custom)
+* **Auth:** Django Auth + Role-Based Access
 
-Backend: Django 5+
+---
 
-Frontend: Bootstrap 5, FontAwesome
+## 📷 Screenshots
 
-Database: SQLite (default), MySQL compatible
+### Homepage / Job Listings
 
-Charts: Chart.js
-
-Email: SMTP (Gmail / Custom)
-
-Authentication: Django Auth + Role-Based Access
-
-### 🔹📷 Screenshots
-
-### Homepage/Job listings
 ![Homepage](screenshots/home.png)
-
 ![Homepage](screenshots/home1.png)
 
-### Employer dashboard
-![Homepage](screenshots/emp1.png)
+### Employer Dashboard
 
-![Homepage](screenshots/emp2.png)
+![Employer](screenshots/emp1.png)
+![Employer](screenshots/emp2.png)
+![Employer](screenshots/emp3.png)
 
-![Homepage](screenshots/emp3.png)
+### Admin Analytics Dashboard
 
-### Admin analytics dashboard
-![Homepage](screenshots/adm1.png)
+![Admin](screenshots/adm1.png)
+![Admin](screenshots/adm2.png)
+![Admin](screenshots/adm3.png)
 
-![Homepage](screenshots/adm2.png)
+---
 
-![Homepage](screenshots/adm3.png)
+## ❤️ Credits
 
-### 🔹❤️ Credits
+**Developer: Juven T. Pinoy**
+🎓 Information Technology Graduate – Carlos Hilado Memorial State University (2025)
+🌐 GitHub: [https://github.com/Juven65](https://github.com/Juven65)
 
-**Developer: Juven T. Pinoy**  
-🎓 Information Technology Graduate – Carlos Hilado Memorial State University (2025)  
-🌐 [GitHub Profile](https://github.com/Juven65)
+**Code Assistance:** ChatGPT (AI-generated guidance and code support)
+**UI:** Bootstrap 5
 
-Code Assistance: ChatGPT
-
-UI: Bootstrap 5
+---
 
 ## ⚙️ Setup Instructions
 
@@ -116,7 +102,7 @@ cd jobmate
 # Create a virtual environment
 python -m venv venv
 
-# Activate it
+# Activate environment
 # Windows
 venv\Scripts\activate
 # Mac/Linux
@@ -125,18 +111,36 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Migrate the database
+# Migrate database
 python manage.py migrate
 
-# Create superuser (optional)
+# Create admin (optional)
 python manage.py createsuperuser
 
-# Run the development server
+# Run server
 python manage.py runserver
-
 ```
 
 ---
 
-### 🔹🏗️ Project Structure
+## 🗂️ Project Structure
 
+```
+jobmate/
+│
+├── accounts/           # User accounts, roles, auth
+├── jobs/               # Job listings, applications
+├── dashboard/          # Admin & employer dashboards
+├── static/             # CSS, JS, images
+├── templates/          # HTML templates
+├── media/              # Uploaded resumes
+│
+├── manage.py
+├── db.sqlite3
+├── requirements.txt
+└── README.md
+```
+
+---
+
+If you want to add a **.env setup section, SMTP Gmail guide, project architecture diagram, or installation gifs**, just tell me: **“Lagyan mo pa ng advanced setup.”**
