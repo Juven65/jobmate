@@ -141,6 +141,4 @@ jobmate/
 └── README.md
 ```
 
----
 
-If you want to add a **.env setup section, SMTP Gmail guide, project architecture diagram, or installation gifs**, just tell me: **“Lagyan mo pa ng advanced setup.”**
