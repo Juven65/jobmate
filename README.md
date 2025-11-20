@@ -75,7 +75,26 @@ Email: SMTP (Gmail / Custom)
 
 Authentication: Django Auth + Role-Based Access
 
+### 🔹📷 Screenshots
 
+### Homepage/Job listings
+![Homepage](screenshots/home.png)
+
+![Homepage](screenshots/home1.png)
+
+### Employer dashboard
+![Homepage](screenshots/emp1.png)
+
+![Homepage](screenshots/emp2.png)
+
+![Homepage](screenshots/emp3.png)
+
+### Admin analytics dashboard
+![Homepage](screenshots/adm1.png)
+
+![Homepage](screenshots/adm2.png)
+
+![Homepage](screenshots/adm3.png)
 
 ### 🔹❤️ Credits
 
@@ -86,10 +105,6 @@ Authentication: Django Auth + Role-Based Access
 Code Assistance: ChatGPT
 
 UI: Bootstrap 5
-
----
-
-### 🔹🏗️ Project Structure
 
 ## ⚙️ Setup Instructions
 
@@ -121,7 +136,7 @@ python manage.py runserver
 
 ```
 
+---
 
-
-
+### 🔹🏗️ Project Structure
 
