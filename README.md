@@ -75,6 +75,8 @@ Email: SMTP (Gmail / Custom)
 
 Authentication: Django Auth + Role-Based Access
 
+
+
 ### 🔹❤️ Credits
 
 **Developer: Juven T. Pinoy**  
