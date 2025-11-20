@@ -1,0 +1,66 @@
+{% extends "employer/base_employer.html" %}
+{% block title %}Manage Jobs{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mt-5 pb-2 border-bottom bg-white sticky-top shadow-sm" style="z-index: 1030;">
+        <h1 class="mb-0">Manage Jobs</h1>
+        <a href="{% url 'employer:dashboard' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle"></i> Back to Dashboard
+        </a>
+    </div>
+
+
+
+
+    <!-- Filter Dropdown -->
+    <form method="get" class="mb-3 d-flex">
+        <label class="me-2 fw-bold">Filter by Status:</label>
+        <select name="status" class="form-select w-auto" onchange="this.form.submit()">
+            <option value="All" {% if status_filter == "All" %}selected{% endif %}>All</option>
+            <option value="Pending" {% if status_filter == "Pending" %}selected{% endif %}>Pending</option>
+            <option value="Hired" {% if status_filter == "Hired" %}selected{% endif %}>Hired</option>
+            <option value="Rejected" {% if status_filter == "Rejected" %}selected{% endif %}>Rejected</option>
+        </select>
+    </form>
+
+    <!-- Jobs Table -->
+    <table class="table table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Applications</th>
+                <th>Posted At</th>
+                <th>Status</th>   <!-- 👈 Added -->
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.title }}</td>
+                <td>{{ job.company }}</td>
+                <td>{{ job.applications.count }}</td>
+                <td>{{ job.posted_at|date:"M d, Y" }}</td>
+                <td>
+                    {% if job.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Hidden</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'employer:job_applications' job.id %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-people"></i> View Applications
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No jobs found for this filter.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

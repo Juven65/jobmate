@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-primary">{{ job.title }}</h2>
+        <p><strong>Company:</strong> {{ job.company }}</p>
+        <p><strong>Location:</strong> {{ job.location }}</p>
+        <p><strong>Salary:</strong> ₱{{ job.salary }}</p>
+        <p>{{ job.description }}</p>
+    </div>
+
+    <hr>
+
+    {% if is_saved %}
+        <a href="{% url 'jobs:unsave_job' job.id %}" class="btn btn-danger">
+            <i class="bi bi-heartbreak"></i> Unsave Job
+        </a>
+    {% else %}
+        <a href="{% url 'jobs:save_job' job.id %}" class="btn btn-outline-primary">
+            <i class="bi bi-heart"></i> Save Job
+        </a>
+    {% endif %}
+
+
+    <!-- Apply Button -->
+    <a href="{% url 'jobs:apply_to_job' job.id %}" class="btn btn-success mt-3">
+        📄 Apply Now
+    </a>
+</div>
+{% endblock %}

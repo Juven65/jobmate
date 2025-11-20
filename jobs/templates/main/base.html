@@ -1,0 +1,235 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Job Board{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        .bell-shake i { animation: shake 0.8s infinite; }
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(-15deg); }
+            40% { transform: rotate(15deg); }
+            60% { transform: rotate(-10deg); }
+            80% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .dropdown-menu-dark {
+            background-color: #2c2c2c;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        .dropdown-menu-dark .dropdown-item,
+        .dropdown-menu-dark .dropdown-item-text,
+        .dropdown-menu-dark small {
+            color: #fff !important;
+        }
+        .dropdown-menu-dark .dropdown-item:hover {
+            background-color: #444;
+            color: #fff;
+        }
+
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1080;
+            text-align: center;
+        }
+
+        /* Optional: Slight animation or styling */
+        .toast {
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            min-width: 300px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'jobs:job_list' %}">JobMate</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto d-flex align-items-center gap-3">
+
+                     <ul>
+                         <li class="nav-item"><a class="nav-link" href="{% url 'jobs:my_applications' %}">My Applications</a></li>
+                     </ul>
+
+                    {% if user.is_authenticated %}
+                        <!-- 🔔 Notifications -->
+                        <li class="nav-item dropdown">
+                          <a class="nav-link position-relative" href="#" id="notifDropdown" role="button"
+                             data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="bi bi-bell"></i>
+                              <span id="notif-badge" class="badge bg-danger" style="display:none;"></span>
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-dark" id="notifDropdownMenu" aria-labelledby="notifDropdown">
+                              <li><span class="dropdown-item-text text-muted">Loading...</span></li>
+                          </ul>
+                        </li>
+                        <!-- Hidden Audio -->
+                        <audio id="notify-sound" src="{% static 'sounds/notify.mp3' %}" preload="auto"></audio>
+
+                        <!-- 👤 Profile Dropdown -->
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if user.profile and user.profile.profile_picture %}
+                                <img src="{{ user.profile.profile_picture.url }}" alt="Profile" class="rounded-circle me-2" style="width:32px;height:32px;object-fit:cover;">
+                            {% else %}
+                                <img src="{% static 'images/default-profile.png' %}" alt="Profile" class="rounded-circle me-2" style="width:32px;height:32px;object-fit:cover;">
+                            {% endif %}
+                          </a>
+
+                          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                              <li><a class="dropdown-item" href="{% url 'jobs:profile' %}"><i class="bi bi-person-circle"></i> My Profile</a></li>
+                              <li>
+                                <form method="post" action="{% url 'jobs:logout' %}" class="d-inline">
+                                  {% csrf_token %}
+                                  <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right"></i> Logout</button>
+                                </form>
+                              </li>
+                              <li><a class="dropdown-item" href="{% url 'jobs:saved_jobs' %}"><i class="bi bi-heart"></i> Saved Jobs</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li>
+                                  <a class="dropdown-item" href="{% url 'adminpanel:inbox' %}"><i class="bi bi-inbox"></i> Inbox</a>
+                              </li>
+                              <li>
+                                  <a class="dropdown-item" href="{% url 'adminpanel:sent_messages' %}"><i class="bi bi-send"></i> Sent</a>
+                              </li>
+                              <li>
+                                  <a class="dropdown-item" href="{% url 'adminpanel:send_message_form' %}"><i class="bi bi-pencil-square"></i> Compose</a>
+                              </li>
+                          </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'jobs:login' %}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'jobs:register' %}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ✅ Toast Messages -->
+    <div id="toast-container">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="toast align-items-center text-white bg-{{ message.tags|default:'primary' }} border-0 fade show mb-2" role="alert">
+            <div class="d-flex">
+              <div class="toast-body">
+                {{ message }}
+              </div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Notifications JS -->
+    <script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function renderNotifications(data) {
+        const badge = document.getElementById("notif-badge");
+        const menu = document.getElementById("notifDropdownMenu");
+        menu.innerHTML = "";
+
+        if (data.count > 0) {
+            badge.textContent = data.count;
+            badge.style.display = "inline-block";
+
+            data.notifications.forEach(n => {
+                let item = "";
+                if (n.type === "application") {
+                    item = `
+                      <a class="dropdown-item" href="${n.url}">
+                          <strong>${n.job_title}</strong><br>
+                          Status: ${n.status}<br>
+                          <small class="text-muted">${n.updated_at}</small>
+                      </a>`;
+                } else if (n.type === "system") {
+                    item = `
+                      <a class="dropdown-item" href="${n.url}">
+                          ${n.message}<br>
+                          <small class="text-muted">${n.updated_at}</small>
+                      </a>`;
+                }
+                menu.innerHTML += `<li>${item}</li>`;
+            });
+
+            menu.innerHTML += `
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-center" href="/jobs/my-applications/">View all</a></li>`;
+        } else {
+            badge.style.display = "none";
+            menu.innerHTML = `<li><span class="dropdown-item-text text-muted">No new notifications</span></li>`;
+        }
+    }
+
+    function fetchNotifs() {
+        fetch("{% url 'jobs:fetch_notifications' %}")
+            .then(r => r.json())
+            .then(data => renderNotifications(data))
+            .catch(err => console.error("Notification fetch error:", err));
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchNotifs();
+        setInterval(fetchNotifs, 15000);
+
+        // auto mark as seen when dropdown opens
+        document.getElementById("notifDropdown").addEventListener("show.bs.dropdown", function () {
+            fetch("{% url 'jobs:mark_notifications_seen' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"),
+                    "Accept": "application/json",
+                },
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("notif-badge").style.display = "none";
+                }
+            });
+        });
+
+        // ✅ Toast auto show + fade
+        const toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        const toastList = toastElList.map(function (toastEl) {
+          const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+          toast.show();
+          return toast;
+        });
+    });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<li class="nav-item mb-2">
+    <a href="{% url 'adminpanel:inbox' %}"
+       class="nav-link text-white {% if request.resolver_match.url_name == 'inbox' %}fw-bold text-warning{% endif %}">
+        📥 Inbox
+    </a>
+</li>
+<li class="nav-item mb-2">
+    <a href="{% url 'adminpanel:sent_messages' %}"
+       class="nav-link text-white {% if request.resolver_match.url_name == 'sent_messages' %}fw-bold text-warning{% endif %}">
+        📤 Sent
+    </a>
+</li>
+<li class="nav-item mb-2">
+    <a href="{% url 'adminpanel:send_message_form' %}"
+       class="nav-link text-white {% if request.resolver_match.url_name == 'send_message_form' %}fw-bold text-warning{% endif %}">
+        ✍️ Compose
+    </a>
+</li>

@@ -1,0 +1,16 @@
+{% extends "adminpanel/base_admin.html" %}
+{% block content %}
+<h2>📤 Sent Messages</h2>
+<ul>
+  {% for msg in messages %}
+    <li>
+      <a href="{% url 'adminpanel:message_detail' msg.id %}">
+        <strong>{{ msg.subject }}</strong> - to {{ msg.receiver.username }}
+      </a>
+      <small class="text-muted"> ({{ msg.timestamp|date:"M d, Y H:i" }})</small>
+    </li>
+  {% empty %}
+    <li>No sent messages</li>
+  {% endfor %}
+</ul>
+{% endblock %}

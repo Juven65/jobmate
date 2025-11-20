@@ -1,0 +1,86 @@
+{% extends "adminpanel/base_admin.html" %}
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">👥 User Management</h2>
+</div>
+
+<!-- 🔍 Search & Filter Form -->
+<form method="get" class="row g-2 mb-4">
+  <div class="col-md-4">
+    <input type="text" name="q" class="form-control" placeholder="🔍 Search by username or email..." value="{{ request.GET.q }}">
+  </div>
+  <div class="col-md-3">
+    <select name="role" class="form-select">
+      <option value="">All Roles</option>
+      <option value="admin" {% if request.GET.role == "admin" %}selected{% endif %}>Admin</option>
+      <option value="employer" {% if request.GET.role == "employer" %}selected{% endif %}>Employer</option>
+      <option value="jobseeker" {% if request.GET.role == "jobseeker" %}selected{% endif %}>Job Seeker</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-primary w-100">Apply Filter</button>
+  </div>
+  <div class="col-md-2">
+    <a href="{% url 'adminpanel:user_list' %}" class="btn btn-secondary w-100">Reset</a>
+  </div>
+</form>
+
+<!-- 🧭 User Table -->
+<div class="card shadow border-0 rounded-3">
+  <div class="card-body p-4">
+    <table class="table align-middle table-hover text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Date Joined</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td class="fw-semibold">{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            {% if user.profile.role == "admin" %}
+              <span class="badge bg-danger px-3 py-2">🛡️ Admin</span>
+            {% elif user.profile.role == "employer" %}
+              <span class="badge bg-primary px-3 py-2">🏢 Employer</span>
+            {% elif user.profile.role == "jobseeker" %}
+              <span class="badge bg-success px-3 py-2">🙋 Job Seeker</span>
+            {% else %}
+              <span class="badge bg-secondary px-3 py-2">❓ Unknown</span>
+            {% endif %}
+          </td>
+          <td>{{ user.date_joined|date:"M d, Y H:i" }}</td>
+          <td>
+            {% if user.is_active %}
+              <span class="badge bg-success px-3 py-2">✅ Active</span>
+            {% else %}
+              <span class="badge bg-danger px-3 py-2">❌ Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if user.is_active %}
+              <a href="{% url 'adminpanel:deactivate_user' user.id %}" class="btn btn-sm btn-outline-warning me-1">Deactivate</a>
+            {% else %}
+              <a href="{% url 'adminpanel:activate_user' user.id %}" class="btn btn-sm btn-outline-success me-1">Activate</a>
+            {% endif %}
+            <a href="{% url 'adminpanel:delete_user' user.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-3">No users found</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

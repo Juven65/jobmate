@@ -1,0 +1,37 @@
+{% extends "adminpanel/base_admin.html" %}
+{% block title %}Employer Detail{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm p-4">
+    <h2 class="mb-3">🏢 Employer: <span class="text-primary">{{ employer.username }}</span></h2>
+    <p><strong>Email:</strong> {{ employer.email }}</p>
+    <p><strong>Date Joined:</strong> {{ employer.date_joined|date:"M d, Y" }}</p>
+
+    <hr>
+
+    <h4 class="mt-4">📋 Jobs Posted ({{ jobs.count }})</h4>
+    <ul class="list-group mb-3">
+        {% for job in jobs %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ job.title }}
+                <span class="badge bg-secondary">{{ job.created_at|date:"M d, Y" }}</span>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No jobs posted yet.</li>
+        {% endfor %}
+    </ul>
+
+    <h4 class="mt-4">📨 Applications Received ({{ applications.count }})</h4>
+    <ul class="list-group mb-3">
+        {% for app in applications %}
+            <li class="list-group-item">
+                <strong>{{ app.applicant.username }}</strong> applied for <em>{{ app.job.title }}</em>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No applications yet.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'adminpanel:employers_overview' %}" class="btn btn-secondary mt-3">⬅ Back to Employers</a>
+</div>
+{% endblock %}

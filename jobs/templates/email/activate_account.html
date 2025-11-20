@@ -1,0 +1,113 @@
+{% load static %}
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to JobMate</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #f5f8fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: linear-gradient(90deg, #007bff, #00c6ff);
+      text-align: center;
+      padding: 40px 20px 30px;
+      color: #fff;
+    }
+    .header img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 50%;
+      background-color: #fff;
+      padding: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      margin-bottom: 15px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 30px 40px;
+      text-align: center;
+      color: #333;
+    }
+    .content h2 {
+      color: #007bff;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    .content p {
+      font-size: 15px;
+      line-height: 1.6;
+      margin: 8px 0;
+    }
+    .button {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 30px;
+      background-color: #007bff;
+      color: #fff !important;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #005fcc;
+    }
+    .footer {
+      background-color: #f1f1f1;
+      text-align: center;
+      padding: 15px;
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://i.postimg.cc/rw8RZ7pC/jobmate-logo.png" alt="JobMate Logo">
+      <h1>Welcome to JobMate</h1>
+    </div>
+
+    <div class="content">
+      <h2>Hello {{ user.username }} 👋</h2>
+      <p>We’re excited to have you join <b>JobMate</b> — your trusted career partner in finding the perfect job.</p>
+      <p>Please confirm your email address to activate your account:</p>
+
+      <a href="http://{{ domain }}{% url 'jobs:activate' uidb64=uid token=token %}" class="button">
+        Verify My Email
+      </a>
+
+      <p style="margin-top:20px;font-size:13px;">
+        If the button doesn’t work, copy and paste this link into your browser:
+        <br>
+        <a href="http://{{ domain }}{% url 'jobs:activate' uidb64=uid token=token %}">
+          http://{{ domain }}{% url 'jobs:activate' uidb64=uid token=token %}
+        </a>
+      </p>
+    </div>
+
+    <div class="footer">
+      © {{ year|default:2025 }} Juven JobMate. All rights reserved.<br>
+      This is an automated message — please do not reply.
+    </div>
+  </div>
+</body>
+</html>

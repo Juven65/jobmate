@@ -1,0 +1,31 @@
+{% extends "main/base.html" %}
+
+{% block title %}Application from {{ application.applicant.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Application Detail</h2>
+
+    <h4>Applicant: {{ application.applicant.username }}</h4>
+    <p><strong>Job Applied:</strong> {{ application.job.title }}</p>
+    <p><strong>Company:</strong> {{ application.job.company }}</p>
+    <p><strong>Applied on:</strong> {{ application.applied_at|date:"M d, Y H:i" }}</p>
+
+    <h5>Message / Cover Letter</h5>
+    <p>{{ application.message }}</p>
+
+    <p>
+        <a href="{{ application.resume.url }}" target="_blank" class="btn btn-primary">Download Resume</a>
+    </p>
+
+    <p><strong>Status:</strong> {{ application.status }}</p>
+
+    <!-- Action buttons -->
+    <div class="mt-3">
+        <a href="{% url 'update_application_status' application.id 'Accepted' %}" class="btn btn-success">Accept</a>
+        <a href="{% url 'update_application_status' application.id 'Rejected' %}" class="btn btn-danger">Reject</a>
+    </div>
+
+    <a href="{% url 'job_applications' application.job.id %}" class="btn btn-secondary mt-3">← Back to Applications</a>
+</div>
+{% endblock %}

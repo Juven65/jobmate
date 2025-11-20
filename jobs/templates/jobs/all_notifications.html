@@ -1,0 +1,79 @@
+{% extends "main/base.html" %}
+{% block title %}All Notifications{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0"><i class="bi bi-bell"></i> All Notifications</h5>
+    </div>
+    <div class="card-body">
+
+      <!-- Tabs -->
+      <ul class="nav nav-tabs mb-3" id="notifTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="jobs-tab" data-bs-toggle="tab" data-bs-target="#jobs" type="button" role="tab">Job Notifications</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="system-tab" data-bs-toggle="tab" data-bs-target="#system" type="button" role="tab">System Notifications</button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+        <!-- Job Notifications -->
+        <div class="tab-pane fade show active" id="jobs" role="tabpanel">
+          {% if job_notifs %}
+            <ul class="list-group mb-3">
+              {% for app in job_notifs %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong>{{ app.job.title }}</strong><br>
+                    Status: {{ app.status }} <br>
+                    <small class="text-muted">{{ app.updated_at|date:"M d, Y H:i" }}</small>
+                  </div>
+                  <a href="{% url 'jobs:job_detail' app.job.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                </li>
+              {% endfor %}
+            </ul>
+            <form method="POST" action="{% url 'jobs:clear_job_notifications' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Clear Job Notifications</button>
+            </form>
+          {% else %}
+            <p class="text-muted">No job notifications.</p>
+          {% endif %}
+        </div>
+
+        <!-- System Notifications -->
+        <div class="tab-pane fade" id="system" role="tabpanel">
+          {% if sys_notifs %}
+            <ul class="list-group mb-3">
+              {% for n in sys_notifs %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <div>
+                    {% if n.link %}
+                      <a href="{{ n.link }}" class="text-decoration-none">{{ n.message }}</a>
+                    {% else %}
+                      {{ n.message }}
+                    {% endif %}
+                    <br>
+                    <small class="text-muted">{{ n.created_at|date:"M d, Y H:i" }}</small>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+            <form method="POST" action="{% url 'jobs:clear_system_notifications' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash"></i> Clear System Notifications
+              </button>
+            </form>
+          {% else %}
+            <p class="text-muted">No system notifications.</p>
+          {% endif %}
+        </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

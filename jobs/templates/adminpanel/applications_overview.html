@@ -1,0 +1,47 @@
+{% extends "adminpanel/base_admin.html" %}
+{% block title %}Applications Overview{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm p-4">
+    <h2 class="mb-3">📄 Applications Overview</h2>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Applicant</th>
+                    <th>Job</th>
+                    <th>Employer</th>
+                    <th>Status</th>
+                    <th>Applied At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>{{ app.id }}</td>
+                    <td>{{ app.full_name }}</td>
+                    <td>{{ app.job.title }}</td>
+                    <td>{{ app.job.posted_by.username }}</td> <!-- ✅ fixed -->
+                    <td>
+                        <span class="badge
+                            {% if app.status == 'Pending' %} bg-warning text-dark
+                            {% elif app.status == 'Accepted' %} bg-success
+                            {% elif app.status == 'Rejected' %} bg-danger
+                            {% else %} bg-secondary {% endif %}">
+                            {{ app.status }}
+                        </span>
+                    </td>
+                    <td>{{ app.applied_at|date:"M d, Y H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No applications found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

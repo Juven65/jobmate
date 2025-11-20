@@ -1,0 +1,166 @@
+{% extends "main/base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Apply to {{ job.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+
+        <!-- Job Details (Left Column) -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h3 class="card-title text-primary">{{ job.title }}</h3>
+                    <p class="mb-2"><strong>🏢 Company:</strong> {{ job.company }}</p>
+                    <p class="mb-2"><strong>📍 Location:</strong> {{ job.location }}</p>
+                    <p class="mb-2"><strong>📝 Description:</strong></p>
+                    <p class="text-muted">{{ job.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Form (Right Column) -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">📄 Submit Your Application</h5>
+                </div>
+                <div class="card-body">
+                    <form id="applicationForm" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Render form fields -->
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label class="form-label">{{ field.label }}</label>
+
+                                {% if field.field.widget.input_type == "file" %}
+                                    <!-- Drag and Drop Upload Box -->
+                                    <div id="dropZone" class="border border-2 border-dashed rounded p-4 text-center bg-light">
+                                        <p class="mb-2">📎 Drag & drop your file here, or click to browse</p>
+                                        <input type="file"
+                                               name="{{ field.name }}"
+                                               class="form-control d-none"
+                                               id="fileInput">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" id="browseBtn">
+                                            Browse File
+                                        </button>
+                                        <p id="fileName" class="mt-2 text-muted small"></p>
+                                    </div>
+                                {% else %}
+                                    {{ field|add_class:"form-control" }}
+                                {% endif %}
+
+                                {% if field.help_text %}
+                                    <div class="form-text text-muted">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                        <!-- Progress bar (hidden by default) -->
+                        <div class="progress mb-3 d-none" id="uploadProgress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                 role="progressbar"
+                                 style="width: 0%"
+                                 id="progressBar">
+                                0%
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100" id="submitBtn">
+                            ✅ Submit Application
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Applicant Tips Section -->
+                <div class="card-footer bg-light">
+                    <h6 class="text-secondary mb-2">💡 Applicant Tips</h6>
+                    <ul class="small text-muted mb-0">
+                        <li>📌 Attach your <strong>updated resume</strong> (preferably in PDF format).</li>
+                        <li>📌 Double-check your contact information before submitting.</li>
+                        <li>📌 Make sure your cover letter (if required) is well-written.</li>
+                        <li>📌 Review the job description to highlight relevant skills.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Drag & Drop + Progress Script -->
+<script>
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+    const fileNameDisplay = document.getElementById("fileName");
+    const browseBtn = document.getElementById("browseBtn");
+
+    const form = document.getElementById("applicationForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const uploadProgress = document.getElementById("uploadProgress");
+    const progressBar = document.getElementById("progressBar");
+
+    // Drag & Drop highlight
+    if (dropZone) {
+        dropZone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropZone.classList.add("bg-white", "border-primary");
+        });
+
+        dropZone.addEventListener("dragleave", () => {
+            dropZone.classList.remove("bg-white", "border-primary");
+        });
+
+        dropZone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropZone.classList.remove("bg-white", "border-primary");
+            if (e.dataTransfer.files.length > 0) {
+                fileInput.files = e.dataTransfer.files;
+                fileNameDisplay.textContent = "📄 " + fileInput.files[0].name;
+            }
+        });
+    }
+
+    // Browse button trigger
+    if (browseBtn) {
+        browseBtn.addEventListener("click", () => fileInput.click());
+    }
+
+    // Show file name on normal selection
+    if (fileInput) {
+        fileInput.addEventListener("change", () => {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = "📄 " + fileInput.files[0].name;
+            }
+        });
+    }
+
+    // Fake progress bar on submit
+    form.addEventListener("submit", function(e) {
+        e.preventDefault(); // prevent real submit for demo
+        submitBtn.disabled = true;
+
+        uploadProgress.classList.remove("d-none");
+        progressBar.style.width = "0%";
+        progressBar.textContent = "0%";
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            progressBar.style.width = progress + "%";
+            progressBar.textContent = progress + "%";
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                progressBar.textContent = "✅ Uploaded!";
+                setTimeout(() => form.submit(), 500); // then submit for real
+            }
+        }, 300);
+    });
+</script>
+{% endblock %}

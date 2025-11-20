@@ -1,0 +1,54 @@
+{% extends "main/base.html" %}
+{% block title %}My Dashboard{% endblock %}
+{% include "partials/_alerts.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">📌 My Dashboard</h2>
+
+  <!-- Activity Feed -->
+  <h4>📰 Recent Activity</h4>
+  {% if activity_feed %}
+    <ul class="list-group mb-4">
+      {% for item in activity_feed %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            {% if item.type == "application" %}
+              ✅ You applied for <strong>{{ item.job.title }}</strong> at
+              <em>{{ item.job.company }}</em>
+              <span class="badge bg-info ms-2">{{ item.status }}</span>
+            {% elif item.type == "saved" %}
+              ⭐ You saved <strong>{{ item.job.title }}</strong> at
+              <em>{{ item.job.company }}</em>
+            {% endif %}
+          </div>
+          <small class="text-muted">{{ item.date|date:"M d, Y H:i" }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">No recent activity yet.</p>
+  {% endif %}
+
+  <!-- Recommended Jobs -->
+  <h4>💡 Recommended for You</h4>
+  {% if recommended_jobs %}
+    <div class="row">
+      {% for job in recommended_jobs %}
+        <div class="col-md-6 mb-3">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ job.title }}</h5>
+              <p class="card-text"><em>{{ job.company }}</em> - {{ job.location }}</p>
+              <small class="text-muted">Matched based on your interests</small><br>
+              <a href="{% url 'jobs:job_detail' job.id %}" class="btn btn-primary btn-sm mt-2">View</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No smart recommendations yet. Try applying or saving jobs!</p>
+  {% endif %}
+</div>
+{% endblock %}

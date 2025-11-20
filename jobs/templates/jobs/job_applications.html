@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+
+{% block title %}Applications for {{ job.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Applications for: {{ job.title }}</h2>
+    <h5>Company: {{ job.company }}</h5>
+
+    {% if applications %}
+        <ul class="list-group mt-3">
+            {% for app in applications %}
+                <li class="list-group-item">
+                    <h5>
+                        <a href="{% url 'jobs:application_detail' app.id %}">
+                            {{ app.applicant.username }}
+                        </a>
+                    </h5>
+
+                    <p><strong>Applied on:</strong> {{ app.applied_at|date:"M d, Y H:i" }}</p>
+                    <p><strong>Cover Letter:</strong> {{ app.cover_letter|truncatechars:150 }}</p>
+
+                    <p>
+                        <a href="{{ app.resume.url }}" target="_blank" class="btn btn-sm btn-outline-primary">View Resume</a>
+                    </p>
+
+                    <p><strong>Status:</strong> {{ app.status }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No applications yet for this job.</p>
+    {% endif %}
+</div>
+{% endblock %}

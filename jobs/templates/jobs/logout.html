@@ -1,0 +1,10 @@
+{% extends "main/base.html" %}
+{% block title %}Logged Out{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <h2 class="fw-bold text-danger">You have been logged out.</h2>
+  <p class="text-muted">See you next time!</p>
+  <a href="{% url 'jobs:login' %}" class="btn btn-success mt-3">Login Again</a>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "main/base.html" %}
+{% block content %}
+  <div class="container mt-4">
+    <div class="mt-5 pb-2 border-bottom bg-white sticky-top shadow-sm" style="z-index: 1030;">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h2 class="mb-0">Employer Dashboard</h2>
+        <p class="mb-0">Welcome, {{ user.username }}! Here are your posted jobs:</p>
+      </div>
+      <a href="{% url 'employer:dashboard' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left-circle"></i> Back to Dashboard
+      </a>
+    </div>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Job Title</th>
+        <th>Company</th>
+        <th>Posted At</th>
+        <th>Applications</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for job in jobs %}
+      <tr>
+        <td>{{ job.title }}</td>
+        <td>{{ job.company }}</td>
+        <td>{{ job.posted_at|date:"M d, Y" }}</td>
+        <td>
+          <a href="{% url 'jobs:view_job_applications' job.id %}" class="btn btn-primary btn-sm">
+            View Applications
+          </a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">You have not posted any jobs yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

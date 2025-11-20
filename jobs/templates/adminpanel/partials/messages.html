@@ -1,0 +1,32 @@
+{% if messages %}
+  <div id="message-container">
+    {% for message in messages %}
+      <div class="alert
+        {% if message.tags == 'success' %}alert-success
+        {% elif message.tags == 'error' %}alert-danger
+        {% elif message.tags == 'warning' %}alert-warning
+        {% else %}alert-info{% endif %}
+        fade show mt-3"
+        data-type="{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    document.querySelectorAll("#message-container .alert").forEach(alert => {
+      let type = alert.getAttribute("data-type");
+      let timeout = 3000; // default 3s
+
+      if (type.includes("success")) timeout = 3000;  // 3s
+      else if (type.includes("info")) timeout = 5000; // 5s
+      else if (type.includes("warning")) timeout = 7000; // 7s
+      else if (type.includes("error")) timeout = 10000; // 10s
+
+      setTimeout(() => {
+        let bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      }, timeout);
+    });
+  </script>
+{% endif %}

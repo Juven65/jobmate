@@ -1,0 +1,162 @@
+{% extends "main/base.html" %}
+{% load widget_tweaks %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <!-- Left Column: Profile Picture -->
+    <div class="col-md-4">
+      <div class="card shadow-sm p-4 d-flex flex-column align-items-center text-center">
+        <img id="profilePreview"
+             src="{{ user.profile.profile_picture.url }}"
+             alt="Profile Picture"
+             class="rounded-circle shadow mb-3"
+             style="width: 160px; height: 160px; object-fit: cover; display: block;">
+
+        <h4 class="mb-1">{{ user.username }}</h4>
+        <p class="text-muted mb-1">{{ user.email }}</p>
+        <small class="text-secondary">Member since: {{ user.date_joined|date:"F d, Y" }}</small>
+      </div>
+    </div>
+
+    <!-- Right Column: Tabbed Interface -->
+    <div class="col-md-8">
+      <div class="card shadow-sm p-4">
+        <!-- Header with Dark Mode Toggle -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0"><i class="bi bi-person-badge"></i> My Profile</h5>
+          <button id="themeToggle" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-moon-fill"></i> Toggle Theme
+          </button>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mb-3" id="profileTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="info-tab" data-bs-toggle="tab"
+                    data-bs-target="#info" type="button" role="tab">
+              <i class="bi bi-person-circle"></i> Profile Info
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="security-tab" data-bs-toggle="tab"
+                    data-bs-target="#security" type="button" role="tab">
+              <i class="bi bi-shield-lock"></i> Security Settings
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="account-tab" data-bs-toggle="tab"
+                    data-bs-target="#account" type="button" role="tab">
+              <i class="bi bi-gear"></i> Account Actions
+            </button>
+          </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="profileTabContent">
+          <!-- Profile Info Tab -->
+          <div class="tab-pane fade show active" id="info" role="tabpanel">
+            <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Profile Picture</label>
+                {{ form.profile_picture|add_class:"form-control" }}
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold">Full Name</label>
+                  {{ form.full_name|add_class:"form-control" }}
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-semibold">Phone</label>
+                  {{ form.phone|add_class:"form-control" }}
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Address</label>
+                {{ form.address|add_class:"form-control" }}
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Bio</label>
+                {{ form.bio|add_class:"form-control" }}
+              </div>
+
+              <button id="saveBtn" type="submit" class="btn btn-primary w-100">
+                <span id="saveText"><i class="bi bi-save"></i> Save Changes</span>
+                <span id="saveSpinner" class="spinner-border spinner-border-sm d-none"
+                      role="status" aria-hidden="true"></span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Security Settings Tab -->
+          <div class="tab-pane fade" id="security" role="tabpanel">
+            <h5 class="mb-3"><i class="bi bi-lock"></i> Security Settings</h5>
+            <p class="text-muted">Manage your login and security preferences.</p>
+            <a href="{% url 'jobs:change_password' %}" class="btn btn-warning mb-2 w-100">
+              <i class="bi bi-key"></i> Change Password
+            </a>
+          </div>
+
+          <!-- Account Actions Tab -->
+          <div class="tab-pane fade" id="account" role="tabpanel">
+            <h5 class="mb-3"><i class="bi bi-person-gear"></i> Account Actions</h5>
+            <p class="text-muted">Control your account lifecycle.</p>
+            <a href="{% url 'jobs:delete_account' %}" class="btn btn-outline-danger w-100 mb-2">
+              <i class="bi bi-trash"></i> Delete Account
+            </a>
+            <a href="{% url 'jobs:deactivate_account' %}" class="btn btn-outline-warning w-100">
+              <i class="bi bi-slash-circle"></i> Deactivate Account
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ JS for Toast + Theme Toggle -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  {% if messages %}
+    {% for message in messages %}
+      const toastEl = document.getElementById("toastMessage");
+      const toastBody = document.getElementById("toastBody");
+      toastBody.textContent = "{{ message }}";
+      toastEl.classList.remove("text-bg-success", "text-bg-danger");
+
+      {% if message.tags == "success" %}
+        toastEl.classList.add("text-bg-success");
+      {% elif message.tags == "error" %}
+        toastEl.classList.add("text-bg-danger");
+      {% endif %}
+
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    {% endfor %}
+  {% endif %}
+
+  // Dark/Light Theme Toggle
+  const body = document.body;
+  const toggleBtn = document.getElementById("themeToggle");
+  if (localStorage.getItem("theme") === "dark") {
+    body.classList.add("bg-dark", "text-light");
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    body.classList.toggle("bg-dark");
+    body.classList.toggle("text-light");
+
+    if (body.classList.contains("bg-dark")) {
+      localStorage.setItem("theme", "dark");
+    } else {
+      localStorage.setItem("theme", "light");
+    }
+  });
+});
+</script>
+{% endblock %}
