@@ -1,96 +1,130 @@
 # 🧑‍💼 JobMate – Django Job Portal
 
-> **Developer Note:** Lahat ng codes, structures, explanations, at logic na ginamit sa project na ito ay galing at tinulungan ni **ChatGPT**. 😊
+JobMate is a full-featured job portal built with **Django**, offering three user roles:
 
-JobMate is a full-featured job portal built with **Django**, offering three main user roles with complete authentication, dashboards, and job management.
+- 👤 **Job Seekers** – create profiles, search jobs, apply
+- 🏢 **Employers** – post jobs, manage applicants
+- ⚙️ **Admin** – manage users, jobs, applications, analytics dashboard
+
+This project includes authentication, role-based access, admin analytics (Chart.js), and modern UI using Bootstrap 5.
 
 ---
 
 ## 🚀 Features
 
 ### 🔹 **Job Seekers**
-
-* Sign up / login
-* Upload resume
-* Browse & search jobs
-* Apply to jobs
-* View application history
+- Registration & login  
+- Upload resume  
+- Browse & search jobs  
+- Apply to jobs  
+- View application history  
 
 ### 🔹 **Employers**
-
-* Register & login
-* Create and manage job postings
-* View applicants
-* Edit & delete job listings
+- Register & login  
+- Create & manage job posts  
+- View applicants  
+- Edit & delete job listings  
 
 ### 🔹 **Admin Panel**
-
-* Full analytics dashboard (Chart.js)
-* Manage all users (activate / deactivate)
-* View recent applicants
-* Admin charts and insights
-
----
+- Dashboard analytics  
+  - Total users  
+  - Total employers  
+  - Active job seekers  
+  - Applications per day  
+  - Jobs per employer  
+- Manage all users  
+- Activate / deactivate accounts  
+- Delete users  
+- View recent applicants & employers  
+- Admin charts using **Chart.js**
 
 ## ✉️ Email System
 
-### **Email Verification (Activation)**
+JobMate includes built-in email features using Django’s `django.core.mail` and token-based verification.
 
-* New users receive an activation link
-* Token-protected
-* Link expires
-* Prevents fake signups
+### 🔹 Email Verification (Account Activation)
+When a new user registers, the system sends an **email verification link**.  
+The user must click the link to activate their account.
 
-### **Password Reset via Email**
+✔️ Secure token (Django built-in)  
+✔️ Activation link expires  
+✔️ Protects against fake signups  
+✔️ Works for both Employers and Job Seekers
 
-* Users enter their email to request reset link
-* Secure token-based password reset
-* Auto-expiring reset URL
+### 🔹 Password Reset via Email
+Users can request a password reset by entering their email.
 
----
+The system sends a secure link that allows them to create a new password.
 
-## 🛠️ Tech Stack
+✔️ Token-based secure reset link  
+✔️ Auto-expiring password reset token  
+✔️ Works for both employers and job seekers  
+✔️ Fully compatible with Django Auth system
 
-* **Backend:** Django 5+
-* **Frontend:** Bootstrap 5, FontAwesome
-* **Database:** SQLite (default), MySQL compatible
-* **Charts:** Chart.js
-* **Email:** SMTP (Gmail / Custom)
-* **Auth:** Django Auth + Role-Based Access
+### 🔹🛠️ Tech Stack
 
----
+Backend: Django 5+
 
-## 📷 Screenshots
+Frontend: Bootstrap 5, FontAwesome
 
-### Homepage / Job Listings
+Database: SQLite (default), MySQL compatible
 
+Charts: Chart.js
+
+Email: SMTP (Gmail / Custom)
+
+Authentication: Django Auth + Role-Based Access
+
+### 🔹📷 Screenshots
+
+### Homepage/Job listings
+<<<<<<< HEAD
 ![Homepage](screenshots/home.png)
+
 ![Homepage](screenshots/home1.png)
 
-### Employer Dashboard
+### Employer dashboard
+![Homepage](screenshots/emp1.png)
 
-![Employer](screenshots/emp1.png)
-![Employer](screenshots/emp2.png)
-![Employer](screenshots/emp3.png)
+![Homepage](screenshots/emp2.png)
 
-### Admin Analytics Dashboard
+![Homepage](screenshots/emp3.png)
 
-![Admin](screenshots/adm1.png)
-![Admin](screenshots/adm2.png)
-![Admin](screenshots/adm3.png)
+### Admin analytics dashboard
+![Homepage](screenshots/adm1.png)
 
----
+![Homepage](screenshots/adm2.png)
 
-## ❤️ Credits
+![Homepage](screenshots/adm3.png)
+=======
+![Homepage/Job listings](screenshots/home.png)
 
-**Developer: Juven T. Pinoy**
-🎓 Information Technology Graduate – Carlos Hilado Memorial State University (2025)
-🌐 GitHub: [https://github.com/Juven65](https://github.com/Juven65)
+![Homepage/Job listings](screenshots/home1.png)
 
-**Code Assistance:** ChatGPT (AI-generated guidance and code support)
-**UI:** Bootstrap 5
+### Employer dashboard
+![Employer dashboard](screenshots/emp1.png)
 
----
+![Employer dashboard](screenshots/emp2.png)
+
+![Employer dashboard](screenshots/emp3.png)
+
+### Admin analytics dashboard
+![Admin analytics dashboard](screenshots/adm1.png)
+
+![Admin analytics dashboard](screenshots/adm2.png)
+
+![Admin analytics dashboard](screenshots/adm3.png)
+>>>>>>> 63ad23f (Save updates before rebase)
+
+### 🔹❤️ Credits
+
+**Developer: Juven T. Pinoy**  
+🎓 Information Technology Graduate – Carlos Hilado Memorial State University (2025)  
+🌐 [GitHub Profile](https://github.com/Juven65)
+
+Code Assistance: ChatGPT
+
+UI: Bootstrap 5
 
 ## ⚙️ Setup Instructions
 
@@ -102,7 +136,7 @@ cd jobmate
 # Create a virtual environment
 python -m venv venv
 
-# Activate environment
+# Activate it
 # Windows
 venv\Scripts\activate
 # Mac/Linux
@@ -111,34 +145,21 @@ source venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Migrate database
+# Migrate the database
 python manage.py migrate
 
-# Create admin (optional)
+# Create superuser (optional)
 python manage.py createsuperuser
 
-# Run server
+# Run the development server
 python manage.py runserver
+
 ```
 
+<<<<<<< HEAD
 ---
 
-## 🗂️ Project Structure
-
-```
-jobmate/
-│
-├── accounts/           # User accounts, roles, auth
-├── jobs/               # Job listings, applications
-├── dashboard/          # Admin & employer dashboards
-├── static/             # CSS, JS, images
-├── templates/          # HTML templates
-├── media/              # Uploaded resumes
-│
-├── manage.py
-├── db.sqlite3
-├── requirements.txt
-└── README.md
-```
-
+### 🔹🏗️ Project Structure
+=======
+>>>>>>> 63ad23f (Save updates before rebase)
 
