@@ -41,7 +41,7 @@ def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            # ✅ Gumamit ng form.save() para gumana yung set_password at role
+            # ✅ Use form.save() to set_password and role work
             user = form.save(commit=False)
             user.is_active = False  # require email activation
             user.save()
